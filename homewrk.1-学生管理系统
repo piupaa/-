@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <string.h>
+using namespace std;
+struct student
+{
+	long int num;
+	char nam[10];
+	int normal;
+	int exe;
+	int fin;
+	float all;
+};
+int main()
+{
+	void f1(struct student *p);
+	void f2(struct student *p);
+	void f3(struct student s[6]);
+	void f4(struct student s[6]);
+	struct student s[6];
+	struct student *p;
+	int t;
+	p=s;
+	f1(p);
+	cout << "请输入：1.统计总成绩并排名" << endl << "2.按学号查询学生信息" << endl << "3.统计平均成绩个和方差" << endl;
+	cin>>t;
+	switch (t)
+	{
+	case 1:f2(p); break;
+	case 2:f3(s); break;
+	case 3:f4(s); break;
+	default:cout << "无效输入" << endl;
+	}
+	return 0;
+}
+void f1(struct student *p)
+{
+	FILE *fp;
+	fp = fopen("D:\data.txt", "r");
+		while (p != NULL)
+		{
+			fscanf_s(fp, "%ld,%s,%d,%d,%d", &p->num, &p->nam, &p->normal, &p->exe, &p->fin);
+				p++;
+		}
+	fclose(fp);
+}
+void f2(struct student *p)
+{
+	struct student *p1;
+		struct tool
+	{
+		char nam[10];
+		float all;
+	}a[6], t;
+	int i = 0, j, m;
+		p1 = p;
+	while (p != NULL)
+	{
+		p->all = p->normal*0.2 + p->exe*0.2 + p->fin*0.6;
+		a[i].all = p->all;
+		strcpy_s(a[i].nam, p->nam);
+		i++;
+		p++;
+	}
+	for (i = 0, i < 5; i++;)
+	{
+		m = i;
+		for (j = i; j < 5; j++)
+			if (a[j].all<a[j+1].all)
+				m = j;
+		t = a[i];
+		a[i] = a[m];
+		a[m] = t;
+	}
+	cout << "成绩排名为：" << endl;
+	for (i = 0; i < 6; i++)
+		cout << i + 1 << ". " << a[i].nam << a[i].all << endl;
+}
+void f3(struct student s[6])
+{
+	int t;
+	cout << "请输入要查询的学号" << endl;
+	cin >> t;
+	cout << s[t].nam << s[t].normal << s[t].exe << s[t].fin << s[t].all << endl;
+}
+void f4(struct student s[6])
+{
+	float a[6], t = 0, n = 0;
+	int i;
+	for (i = 0; i < 6; i++)
+		a[i] = s[i].all = s[i].normal*0.2 + s[i].exe*0.2 + s[i].fin*0.6;
+	for (i = 0; i < 6; i++)
+		t = t + a[i];
+	t = t / 6;
+	for (i = 0; i < 6; i++)
+		n = n + (t - a[i])*(t - a[i]);
+	n = n / 6;
+	cout << "平均分" << t << "方差" << n << endl;
+}
